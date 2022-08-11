@@ -34,3 +34,6 @@ target_linux_make_install_cmd: "{{ make }} modules_install install"
 
 # If defined we'll apply this delta for you.
 # target_linux_extra_patch: foo.patch
+
+# If defined we'll fetch the mail id from lore.
+target_linux_apply_patch_message_id: 20220803094801.177490-1-p.raghav@samsung.com

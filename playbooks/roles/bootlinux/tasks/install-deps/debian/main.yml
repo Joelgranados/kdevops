@@ -35,5 +35,6 @@
       - portmap
       - hwinfo
       - open-iscsi
+      - b4
     state: present
   tags: linux

@@ -92,6 +92,39 @@
   tags: [ 'linux', 'extra-patch', 'skip_ansible_lint' ]
   when: target_linux_extra_patch is defined
 
+- name: configure git user mail
+  command: "git config --global user.email vagrant@test.com"
+  tags: [ 'linux', 'extra-patch', 'skip_ansible_lint' ]
+  when: 
+    - target_linux_apply_patch_message_id is defined
+    - box_dev is defined
+
+- name: configure git user name
+  command: "git config --global user.name vagrant"
+  tags: [ 'linux', 'extra-patch', 'skip_ansible_lint' ]
+  when:
+    - target_linux_apply_patch_message_id is defined
+    - box_dev is defined
+
+- name: Make sure we are not in the middle of an git am
+  command: "git am --quit"
+  args:
+    chdir: "{{ target_linux_dir_path }}"
+  tags: [ 'linux', 'extra-patch', 'skip_ansible_lint' ]
+  ignore_errors: yes
+  when:
+    - target_linux_apply_patch_message_id is defined
+    - box_dev is defined
+
+- name: Apply message patch set
+  shell: b4 am -o - {{target_linux_apply_patch_message_id}} | git am
+  args:
+    chdir: "{{ target_linux_dir_path }}"
+  tags: [ 'linux', 'extra-patch', 'skip_ansible_lint' ]
+  when: 
+    - target_linux_apply_patch_message_id is defined
+    - box_dev is defined
+
 - name: Copy configuration for linux {{ target_linux_tree }}
   template:
     src: "{{ target_linux_config }}"
